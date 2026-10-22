@@ -27,6 +27,9 @@ namespace testingGenericSorting {
             public int age;
             public float power;
 
+            public Class1() {
+
+            }
             public Class1(string userName, int age, float power) {
                 this.userName = userName;
                 this.age = age;
@@ -37,17 +40,20 @@ namespace testingGenericSorting {
         public class Class2 {
             public DateTime date;
             public string catchPhrase;
+            public char letter;
 
-            public Class2(string date, string catchPhrase) {
+            public Class2(string date, string catchPhrase, char letter) {
                 this.date = DateTime.Parse(date);
                 this.catchPhrase = catchPhrase;
+                this.letter = letter;
             }
         }
 
-
-        static FieldPackage[] GenericFieldNames<T>(T obj) { //detta kan ta vilken type som helst och kolla alla fields som finns i den.
+        //detta kan ta vilken type som helst och kolla alla fields som finns i den.
+        static FieldPackage[] GenericFieldNames<T>(T obj) { 
             FieldInfo[] fieldInfos = obj.GetType().GetFields();
             FieldPackage[] fieldPackage = new FieldPackage[fieldInfos.Length];
+
             for (int i = 0; i < fieldInfos.Length; i++) {
                 #region Some comments
                 //Debug.Log("name of field: " + fieldInfos[i].Name); //variablen namn
@@ -60,40 +66,86 @@ namespace testingGenericSorting {
 
             return fieldPackage;
         }
+
+        static Class1[] RandomClass1(int arraySize, int randomSeed) {
+            Class1[] outputArray = new Class1[arraySize];
+            string[] randomString = new string[] { "abc", "aaw", "wauda", "aspdo", "odpq", "pwapd", "o1oiiadk", "ppqea", "xscaft", "lasdp", "wwarp", "short" };
+            //String, number, float
+            Random random = new Random(randomSeed);
+
+            for(int i = 0; i < outputArray.Length; i++) {
+                outputArray[i] = new(randomString[random.Next(0, randomString.Length)], random.Next(0, 100), random.NextSingle());
+            }
+
+            return outputArray;
+        }
+
+        static Class2[] RandomClass2(int arraySize, int randomSeed) {
+            Class2[] outputArray = new Class2[arraySize];
+            string[] randomString = new string[] { "abc", "aaw", "wauda", "aspdo", "odpq", "pwapd", "o1oiiadk", "ppqea", "xscaft", "lasdp", "wwarp", "short" };
+            char[] randomChars = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'w', 'z', 'c', 'd', 's' };
+            //Date, string, char
+            Random random = new Random(randomSeed);
+            
+            for(int i = 0; i < arraySize; i++) {
+                DateTime newDate = new DateTime();
+
+                newDate = newDate.AddYears(random.Next(1450, 2000));
+                newDate = newDate.AddDays(random.Next(1, 20));
+                newDate = newDate.AddMonths(random.Next(1, 13));
+                outputArray[i] = new Class2(newDate.ToString(), randomString[random.Next(randomString.Length)], randomChars[random.Next(randomChars.Length)]);
+            }
+
+
+
+            return outputArray;
+        }
         static void Main(string[] args) {
 
-            Class1[] Class1s = new Class1[8];
-            Class2[] Class2s = new Class2[8];
-            #region defining the classes hardcoded style
-            Class1s[0] = new("test1", 10,   55f);
-            Class1s[1] = new("test2", 440,  25f);
-            Class1s[2] = new("test3", 20,   51f);
-            Class1s[3] = new("abc",   10,     545f);
-            Class1s[4] = new("aba", 30,     35f);
-            Class1s[5] = new("aca", 44,     65f);
-            Class1s[6] = new("st2", 40,     5f);
-            Class1s[7] = new("uuo", 10,     15f);
+            int arraySize = 4000;
+            int randomSeed = 100;
 
-            Class2s[0] = new("1910-10-01", "Yippie-ki-yay, motherf*****!");
-            Class2s[1] = new("1211-10-01", "hasta la vista, baby");
-            Class2s[2] = new("1810-10-01", "this is sparta");
-            Class2s[3] = new("1230-3-01", "You shall not pass!");
-            Class2s[4] = new("2120-10-22", "i'll be back");
-            Class2s[5] = new("1220-10-01", "say hello to my little friend");
-            Class2s[6] = new("1330-2-11", "may the force be with you");
-            Class2s[7] = new("1180-03-01", "Here’s Johnny!");
-            #endregion
+            Class1[] class1s = RandomClass1(arraySize, randomSeed);
+            Class2[] class2s = RandomClass2(arraySize, randomSeed);
+            var timeStopOnce = System.Diagnostics.Stopwatch.StartNew();
+            var timeStopLoop = System.Diagnostics.Stopwatch.StartNew();
 
-            InsertionSort(Class1s, 2, false);
-            InsertionSort(Class2s, 1, false);
+            timeStopOnce.Start();
+            InsertionSortGetOnce(class1s, 1, false);
+            InsertionSortGetOnce(class2s, 1, false);
+            timeStopOnce.Stop();
 
-            for (int i = 0; i < Class1s.Length; i++) {
-                Console.WriteLine($"{Class1s[i].userName}\t - {Class1s[i].age}\t - {Class1s[i].power}");
+            for (int i = 0; i < class1s.Length; i++) {
+                Console.WriteLine($"{class1s[i].userName}\t - {class1s[i].age}\t - {class1s[i].power}");
             }
 
-            for(int i = 0; i < Class2s.Length; i++) {
-                Console.WriteLine($"{Class2s[i].date.ToString()}\t - {Class2s[i].catchPhrase}");
+            for(int i = 0; i < class2s.Length; i++) {
+                Console.WriteLine($"{class2s[i].date.ToString()}\t - {class2s[i].catchPhrase}");
             }
+
+            Console.WriteLine("Time spent sorting with one get function on fields: " + timeStopOnce.ElapsedMilliseconds + " ms");
+            Console.WriteLine("Press any key to test other method");
+
+            class1s = RandomClass1(arraySize, randomSeed);
+            class2s = RandomClass2(arraySize, randomSeed);
+
+            timeStopLoop.Start();
+            InsertionSortGetEveryLoop(class1s, 1, false);
+            InsertionSortGetEveryLoop(class2s, 1, false);
+            timeStopLoop.Stop();
+
+            Console.WriteLine("time spent sorting geting types every iteration: " + timeStopLoop.ElapsedMilliseconds + " ms");
+            Console.WriteLine("Time spent sorting with one get function on fields: " + timeStopOnce.ElapsedMilliseconds + " ms");
+            long diff = timeStopOnce.ElapsedMilliseconds - timeStopLoop.ElapsedMilliseconds;
+            Console.WriteLine("Once - Loop = " + diff + " ms");
+            Console.WriteLine("array size : " + arraySize);
+            Console.WriteLine("Seed: " + randomSeed);
+            Console.ReadKey();
+
+
+
+
+
 
             Console.ReadKey();
         }
@@ -105,7 +157,7 @@ namespace testingGenericSorting {
         /// <param name="classArray">an array of the class</param>
         /// <param name="fieldPos">the position of the variable inside the variable, if this is over the amount of variables it will crash.</param>
         /// <param name="topFirst">Default is true which will place the highest value on top.</param>
-        public static void InsertionSort<T>(T[] classArray, int fieldPos, bool topFirst = true) {
+        public static void InsertionSortGetEveryLoop<T>(T[] classArray, int fieldPos, bool topFirst = true) {
             if (classArray.Length <= 0)
                 return;
 
@@ -114,6 +166,7 @@ namespace testingGenericSorting {
 
             for (int i = 1; i < classArray.Length; i++) {
                 FieldPackage[] iFields = GenericFieldNames(classArray[i]);
+
                 for (int j = 0; j < i; j++) {
 
                     FieldPackage[] jFields = GenericFieldNames(classArray[j]);
@@ -130,6 +183,46 @@ namespace testingGenericSorting {
 
                             (classArray[i], classArray[j]) =
                                 (classArray[j], classArray[i]);
+                        }
+                    }
+                }
+
+            }
+        }
+
+        public static void InsertionSortGetOnce<T>(T[] classArray, int fieldPos, bool topFirst = true) {
+            if (classArray.Length <= 0)
+                return;
+
+            List<FieldPackage[]> fieldPackages = new List<FieldPackage[]>();
+            for(int i = 0; i < classArray.Length; i++) {
+                fieldPackages.Add(GenericFieldNames(classArray[i]));
+            }
+
+
+            IComparer comparer = Comparer.Default;
+
+
+            for (int i = 1; i < classArray.Length; i++) {
+
+                for (int j = 0; j < i; j++) {
+
+                    if (topFirst) {
+                        if (comparer.Compare(fieldPackages[i][fieldPos].variableValue, fieldPackages[j][fieldPos].variableValue) > 0) {
+
+                            (classArray[i], classArray[j]) =
+                            (classArray[j], classArray[i]);
+                            (fieldPackages[i], fieldPackages[j]) =
+                            (fieldPackages[j], fieldPackages[i]);
+                        }
+                    }
+                    else {
+                        if (comparer.Compare(fieldPackages[i][fieldPos].variableValue, fieldPackages[j][fieldPos].variableValue) < 0) {
+
+                            (classArray[i], classArray[j]) =
+                            (classArray[j], classArray[i]);
+                            (fieldPackages[i], fieldPackages[j]) =
+                            (fieldPackages[j], fieldPackages[i]);
                         }
                     }
                 }
