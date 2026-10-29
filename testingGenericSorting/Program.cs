@@ -5,6 +5,7 @@ using static Fieldpackaging.FieldUtility;
 using static testingGenericSorting.InsertionSorting;
 using static testingGenericSorting.SortingAlgos;
 using static testingGenericSorting.SearchAlgos;
+using static testingGenericSorting.IndexSorting;
 
 namespace testingGenericSorting {
     internal class Program {
@@ -59,27 +60,25 @@ namespace testingGenericSorting {
         }
         static void Main(string[] args) {
 
-            int[] testArray = CreateNumberArray(10, 10);
-            int[] numArray = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            LinkedList<int> linkedInt = new LinkedList<int>(numArray);
-            InsertionSort(testArray);
-            Yggdrasil yggdrasil = new();
+            int[] testArray = CreateNumberArray(50, 10);
 
+            int[] sortedIndex = GetSortedIndex(testArray);
 
-            yggdrasil.BuildBalance(numArray);
-            Console.WriteLine("Root: " + yggdrasil.root.index);
-            //yggdrasil.PrintOrder();
-
-            foreach(int i in linkedInt) {
-                Console.WriteLine(i);
+            for(int i = 0; i < testArray.Length; i++) {
+                Console.Write(" " + testArray[sortedIndex[i]]);
             }
 
-            Console.WriteLine("Test");
-            linkedInt.RemoveLast();
-            Console.WriteLine("This: ");
-            foreach (int i in linkedInt) {
-                Console.WriteLine(i);
+            Console.WriteLine("\n\n\n Actual array pos\n");
+
+            for(int i = 0; i < testArray.Length; i++) {
+                Console.Write(" " + testArray[i]);
             }
+
+            //int[] numArray = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            //LinkedList<int> linkedInt = new LinkedList<int>(numArray);
+            //InsertionSort(testArray);
+            //Yggdrasil yggdrasil = new();
+            //yggdrasil.TakeRoot(100);
 
 
             //Console.WriteLine(string.Join(", ", testArray));
@@ -94,8 +93,6 @@ namespace testingGenericSorting {
             //        Console.WriteLine("found: " + temp[i]);
             //    }
             //}
-
-
 
         }
 
