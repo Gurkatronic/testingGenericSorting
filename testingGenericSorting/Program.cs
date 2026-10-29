@@ -3,6 +3,8 @@ using System.Reflection;
 using testingGenericSorting;
 using static Fieldpackaging.FieldUtility;
 using static testingGenericSorting.InsertionSorting;
+using static testingGenericSorting.SortingAlgos;
+using static testingGenericSorting.SearchAlgos;
 
 namespace testingGenericSorting {
     internal class Program {
@@ -42,18 +44,59 @@ namespace testingGenericSorting {
 
             return outputArray;
         }
+
+        public static int[] CreateNumberArray(int arraySize, int seed) {
+            int low = 0;
+            int high = 100;
+            int[] output = new int[arraySize];
+            Random random = new(seed);
+
+            for(int i = 0; i < arraySize; i++) {
+                output[i] = random.Next(low, high);
+            }
+
+            return output;
+        }
         static void Main(string[] args) {
 
-            NumberClass test = new("tester", 10, 0.2f);
+            int[] testArray = CreateNumberArray(10, 10);
+            int[] numArray = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            LinkedList<int> linkedInt = new LinkedList<int>(numArray);
+            InsertionSort(testArray);
+            Yggdrasil yggdrasil = new();
 
-            var hashTest = new HashSet<NumberClass>();
 
-            hashTest.Add(test);
+            yggdrasil.BuildBalance(numArray);
+            Console.WriteLine("Root: " + yggdrasil.root.index);
+            //yggdrasil.PrintOrder();
 
-            foreach(NumberClass numclass in hashTest)
-            {
-                Console.WriteLine(numclass.age);
+            foreach(int i in linkedInt) {
+                Console.WriteLine(i);
             }
+
+            Console.WriteLine("Test");
+            linkedInt.RemoveLast();
+            Console.WriteLine("This: ");
+            foreach (int i in linkedInt) {
+                Console.WriteLine(i);
+            }
+
+
+            //Console.WriteLine(string.Join(", ", testArray));
+            //BinaryRange binaryRange = new(testArray);
+
+            //binaryRange.PerformSearch(19, 30);
+
+            //int[]? temp = binaryRange.GetResults();
+
+            //if (temp != null) {
+            //    for (int i = 0; i < temp.Length; i++) {
+            //        Console.WriteLine("found: " + temp[i]);
+            //    }
+            //}
+
+
+
         }
 
         static void MeasureSortingMethods()
