@@ -31,7 +31,7 @@ namespace testingGenericSorting {
 
         static int PartionSort<T>(int[] indexSorted, T[] referenceArray, int start, int end) {
 
-            T pivot = referenceArray[indexSorted[end]]; // detta blir fel jag måste använda mig utav index sorted
+            T pivot = referenceArray[indexSorted[end]];
             Comparer comparer = Comparer.Default;
             int pointer = start - 1;
 

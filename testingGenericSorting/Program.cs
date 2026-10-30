@@ -64,6 +64,7 @@ namespace testingGenericSorting {
 
             int[] sortedIndex = GetSortedIndex(testArray);
 
+
             for(int i = 0; i < testArray.Length; i++) {
                 Console.Write(" " + testArray[sortedIndex[i]]);
             }
