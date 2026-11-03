@@ -7,6 +7,7 @@ using System.Text;
 namespace testingGenericSorting {
     internal class IndexSorting {
         public static bool randomPivot = false;
+        
 
         public static int[] GetSortedIndex<T>(T[] referenceArray) {
             int start = 0;

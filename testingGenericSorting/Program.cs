@@ -47,8 +47,8 @@ namespace testingGenericSorting {
         }
 
         public static int[] CreateNumberArray(int arraySize, int seed) {
-            int low = 0;
-            int high = 100;
+            int low = 1;
+            int high = 10;
             int[] output = new int[arraySize];
             Random random = new(seed);
 
@@ -60,8 +60,8 @@ namespace testingGenericSorting {
         }
         static void Main(string[] args) {
 
-            int[] testArray = CreateNumberArray(10000, 10);
-            
+            int[] testArray = CreateNumberArray(10, 10);
+
             int[] sortedIndex = GetSortedIndex(testArray);
             int[] treeTestArray = new int[] { 5, 2, 3, 4, 2, 0 };
 
@@ -72,15 +72,25 @@ namespace testingGenericSorting {
             Console.WriteLine(string.Join(", ", testArray));
             binTree.TakeRoot(testArray, 0, testArray.Length-1);
 
+            binTree.FindValue(7);
+            binTree.DeleteValue(7);
+            binTree.DeleteValue(7);
+            binTree.DeleteValue(7);
+            binTree.DeleteValue(7);
+
+
+
+            //Search measure
             var timer = System.Diagnostics.Stopwatch.StartNew();
             int searchValue = 14;
 
             timer.Start();
             binTree.FindValue(searchValue);
             timer.Stop();
-            Console.WriteLine("Tree searching took: " + timer.ElapsedTicks);
+            Console.WriteLine("Tree searching took: " + timer.ElapsedMilliseconds);
 
-            testArray = CreateNumberArray(999999999, 10);
+            testArray = CreateNumberArray(800, 10);
+            QuickSort(testArray);
 
             timer = System.Diagnostics.Stopwatch.StartNew();
             timer.Start();
@@ -88,6 +98,30 @@ namespace testingGenericSorting {
             timer.Stop();
 
             Console.WriteLine("Regular binary search took: " + timer.ElapsedTicks);
+            //Search stop.
+
+            //Adding and then searching timer
+            testArray = CreateNumberArray(800, 10);
+            QuickSort(testArray);
+
+            timer = System.Diagnostics.Stopwatch.StartNew();
+            timer.Start();
+            AddArray(testArray, 1337);
+            BinarySearch(testArray, 1337);
+            timer.Stop();
+            Console.WriteLine("Adding to an array and searching with binary search: " + timer.ElapsedTicks);
+
+            binTree = new();
+            binTree.TakeRoot(testArray, 0, testArray.Length - 1);
+            timer = System.Diagnostics.Stopwatch.StartNew();
+            timer.Start();
+            binTree.AddInfo(1337);
+            binTree.FindValue(1337);
+            timer.Stop();
+
+            Console.WriteLine("Adding a new slot to the tree and searching it: " + timer.ElapsedTicks);
+
+
 
 
             //Yggdrasil yggdrasil = new();
@@ -145,96 +179,29 @@ namespace testingGenericSorting {
 
         }
 
-        static void SpecialSort(int[] array, int low, int high) {
-            
-            while(low <= high) {
-                if (array[low] < array[high])
-                    (array[low], array[high]) = (array[high], array[low]);
-                else {
-                    low++;
-                }
-            }
+        static void AddArray<T>(T[] array, T data) where T: IComparable<T>{
 
-            Console.WriteLine(string.Join(", ", array));
-        }
+            T[] tempArray = new T[array.Length + 1];
+            int elementFound = 0;
 
-        static void NormalSort(int[] array, int low, int high) {
-            for(int i = 1; i < high; i++) {
-                for(int j = 0; j < i; j++) {
-                    if (array[i] < array[j]) {
-
-                        (array[j], array[i]) = (array[i], array[j]);
-                    }
-                        
-                }
-            }
-
-            Console.WriteLine(string.Join(", ", array));
-        }
-
-        static void LetsSortIt(int[] array, int low, int high) {
-
-            //split in the middle for as many times it can be done
-            //
-            int splitAmount = high/2; //it can be split 4 times on an array of size 10
-            if (splitAmount <= 1) return;
-
-            for(int i = 0; i < splitAmount*2; i++) {
-                Console.WriteLine($"low {i} high {i + 2}");
-                CompareSwitch(array, i, i + 2);
-            }
-
-            LetsSortIt(array, low, high-1);
-
-            Console.WriteLine(string.Join(",",array));
-            
-        }
-
-        static void MerginSort(int[] array, int low, int high) {
-            int n = high/2;
-            int i = low;
-            if (low+1 == high) return;
-            Console.WriteLine($"i: {i} n {n}");
-            MerginSort(array, i, n);
-            MerginSort(array, n + 1, high);
-        }
-
-        static void CompareSwitch(int[] array, int index, int indexSwap) {
-            if (array[index] < array[indexSwap])
-                (array[index], array[indexSwap]) = (array[indexSwap], array[index]);
-        }
-
-        static void SpiceSort(int[] array, int low, int high) {
-            //Split all arrays into arrays of smaller parts then sum and do a pass to check numbers once
-            int middle = (low + high) / 2;
-            while(middle > 2) {
-                Console.WriteLine("Middle " + middle);
-                ParallelMerge(array, low, middle);
-                ParallelMerge(array, middle + 1, high);
-                middle = SplitMiddle(low, middle);
-            }
-            Console.WriteLine(string.Join(", ", array));
             for(int i = 0; i < array.Length; i++) {
-
+                if (array[i].CompareTo(data) > 0) {
+                    elementFound = i;
+                    break;
+                }
+                tempArray[i] = array[i];
             }
-            
+
+            for(int i = elementFound; i < array.Length; i++) {
+                tempArray[i + 1] = array[i];
+            }
+
+            tempArray[elementFound] = data;
+            array = tempArray;
 
         }
 
-        static void ParallelMerge(int[] array, int low, int high) {
-            Console.WriteLine($"Low {low} >_< High {high}");
-            if (low >= high) return;
-            if (array[low] < array[high])
-                (array[low], array[high]) = (array[high], array[low]);
-            else
-                ParallelMerge(array, low + 1, high - 1);
-        }
-
-        static int SplitMiddle(int low, int high) {
-
-            int middle = (high + (low - high)) / 2;
-            return middle;
-        }
+       
 
         static void MeasureSortingMethods()
         {

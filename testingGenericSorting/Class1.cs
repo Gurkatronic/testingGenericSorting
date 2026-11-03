@@ -14,6 +14,8 @@ namespace testingGenericSorting {
             left = null;
             right = null;
         }
+
+
     }
 
     public class BinaryTree<T> where T : IComparable<T> {
@@ -23,53 +25,78 @@ namespace testingGenericSorting {
             
         }
 
+        public bool DeleteValue(T data) {
+            Node<T> node = root;
+            int steps = 0;
+
+            while(node != null) {
+                if(node.data.CompareTo(data) == 0 ) {
+                    //Console.WriteLine("Found the object. after " + steps + " steps");
+                    HandleDelete(node, data);
+                }
+                else if (node.data.CompareTo(data) > 0) {
+                    node = node.left;
+                }
+                else if (node.data.CompareTo(data) < 0) {
+                    node = node.right;
+                }
+            }
+            return false;
+        }
+
+
+        //delete operation
+        //No child just delete
+        //1 child promote up
+        //2 child spooky stuff
+        void HandleDelete(Node<T> node, T data) {
+
+            Console.WriteLine("Stefany tänker smyga hem");
+            while(node != null) {
+                if(node.left == null && node.right == null) {
+                    Console.WriteLine("tar bort data: " + node.data.ToString());
+                    node = null;
+                    Console.WriteLine("TAR BORT ELEMENT");
+                    return;
+                }
+                else if(node.left != null && node.right == null) {
+                    node = node.left;
+                    return;
+                }
+                else if(node.right != null && node.left == null) {
+                    node = node.right;
+                    return;
+                }
+                else if(node.right != null && node.left != null) {
+                    //node.data = node.left.data;
+                    Console.WriteLine("Spännande vägen");
+                    node = node.left;
+                }
+            }
+        }
+
+
         public bool FindValue(T data) {
             if (root == null)
                 return false;
             Node<T> node = root;
             int steps = 0;
 
-            while(true) {
+            while(node != null) {
                 if (node.data.CompareTo(data) == 0) {
                     Console.WriteLine("Found data after: " + steps + " steps");
                     return true;
                 }
-                else if(node.data.CompareTo(data) > 0 && node.left != null) {
+                else if(node.data.CompareTo(data) > 0 ) {
                     node = node.left;
                 }
-                else if(node.data.CompareTo(data) < 0 && node.right != null) {
+                else if(node.data.CompareTo(data) < 0 ) {
                     node = node.right;
                 }
-                else {
-                    Console.WriteLine("Data could not be found. Steps taken: " + steps);
-                    return false;
-                }
-
                 steps++;
             }
-        }
-
-        public void PrintVisually() {
-            if (root == null) {
-                Console.WriteLine("Empty tree");
-                return;
-            }
-            PrintRecursive(root, "", true, true);
-            Console.WriteLine();
-        }
-
-        private void PrintRecursive(Node<T>? node, string indentString, bool isLeftBranch, bool isRootNode) {
-            if (node == null) return;
-
-            // Gå hela vägen till höger (ritas högst upp)
-            PrintRecursive(node.right, indentString + (isRootNode ? "" : (isLeftBranch ? "│   " : "    ")), false, false);
-
-            // Rita ut linjer baserat på om det är rot, vänster- eller högergren
-            string branchShape = isRootNode ? "──> " : (isLeftBranch ? "└── " : "┌── ");
-            Console.WriteLine(indentString + branchShape + node.data);
-
-            // Gå sedan till vänster (ritas längst ner)
-            PrintRecursive(node.left, indentString + (isRootNode ? "" : (isLeftBranch ? "    " : "│   ")), true, false);
+            Console.WriteLine("Data could not be found. Steps taken: " + steps);
+            return false;
         }
 
         public void TakeRoot(T[] array, int start, int end) {
