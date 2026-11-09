@@ -60,7 +60,7 @@ namespace testingGenericSorting {
         }
         static void Main(string[] args) {
 
-            int[] testArray = CreateNumberArray(10, 10);
+            int[] testArray = CreateNumberArray(800, 10);
 
             int[] sortedIndex = GetSortedIndex(testArray);
             int[] treeTestArray = new int[] { 5, 2, 3, 4, 2, 0 };
@@ -73,12 +73,6 @@ namespace testingGenericSorting {
             binTree.TakeRoot(testArray, 0, testArray.Length-1);
 
             binTree.FindValue(7);
-            binTree.DeleteValue(7);
-            binTree.DeleteValue(7);
-            binTree.DeleteValue(7);
-            binTree.DeleteValue(7);
-
-
 
             //Search measure
             var timer = System.Diagnostics.Stopwatch.StartNew();
@@ -101,25 +95,25 @@ namespace testingGenericSorting {
             //Search stop.
 
             //Adding and then searching timer
-            testArray = CreateNumberArray(800, 10);
-            QuickSort(testArray);
+            //testArray = CreateNumberArray(800, 10);
+            //QuickSort(testArray);
 
-            timer = System.Diagnostics.Stopwatch.StartNew();
-            timer.Start();
-            AddArray(testArray, 1337);
-            BinarySearch(testArray, 1337);
-            timer.Stop();
-            Console.WriteLine("Adding to an array and searching with binary search: " + timer.ElapsedTicks);
+            //timer = System.Diagnostics.Stopwatch.StartNew();
+            //timer.Start();
+            //AddArray(testArray, 1337);
+            //BinarySearch(testArray, 1337);
+            //timer.Stop();
+            //Console.WriteLine("Adding to an array and searching with binary search: " + timer.ElapsedTicks);
 
-            binTree = new();
-            binTree.TakeRoot(testArray, 0, testArray.Length - 1);
-            timer = System.Diagnostics.Stopwatch.StartNew();
-            timer.Start();
-            binTree.AddInfo(1337);
-            binTree.FindValue(1337);
-            timer.Stop();
+            //binTree = new();
+            //binTree.TakeRoot(testArray, 0, testArray.Length - 1);
+            //timer = System.Diagnostics.Stopwatch.StartNew();
+            //timer.Start();
+            //binTree.AddInfo(1337);
+            //binTree.FindValue(1337);
+            //timer.Stop();
 
-            Console.WriteLine("Adding a new slot to the tree and searching it: " + timer.ElapsedTicks);
+            //Console.WriteLine("Adding a new slot to the tree and searching it: " + timer.ElapsedTicks);
 
 
 
