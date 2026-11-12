@@ -51,7 +51,6 @@ namespace testingGenericSorting {
         //2 child spooky stuff
         void HandleDelete(Node<T> node, T data) {
 
-            Console.WriteLine("Stefany tänker smyga hem");
             while(node != null) {
                 if(node.left == null && node.right == null) {
                     Console.WriteLine("tar bort data: " + node.data.ToString());
@@ -69,7 +68,6 @@ namespace testingGenericSorting {
                 }
                 else if(node.right != null && node.left != null) {
                     //node.data = node.left.data;
-                    Console.WriteLine("Spännande vägen");
                     node = node.left;
                 }
             }

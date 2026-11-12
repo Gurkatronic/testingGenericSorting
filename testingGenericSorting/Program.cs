@@ -61,7 +61,6 @@ namespace testingGenericSorting {
         static void Main(string[] args) {
 
             int[] testArray = CreateNumberArray(800, 10);
-
             int[] sortedIndex = GetSortedIndex(testArray);
             int[] treeTestArray = new int[] { 5, 2, 3, 4, 2, 0 };
 
